@@ -2,31 +2,41 @@ name: CI
 
 on:
   push:
-    branches:
-      - reg
-      - hyper
+    branches: [ main, reg, hyper ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run regression script
+        run: |
+          python regression.py
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - name: Run Hyperparameter Tuning
+      run: |
+        python hyperparameter_tuning.py
+      if: github.ref == 'refs/heads/hyper'
+      env:
+        PYTHONPATH: "$GITHUB_WORKSPACE"
+
+    - name: Upload Results
+      uses: actions/upload-artifact@v3
       with:
-        python-version: '3.10'
+        name: regression-results
+        path: |
+          regression_results.json
+          predictions_*.npy
 
-    - name: Install dependencies
+    - name: Print Results
       run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Run Regression Script
-      run: |
-        source venv/bin/activate
-        python regression.py
+        cat regression_results.json
+        echo "\nPredictions saved in predictions_*.npy files"
