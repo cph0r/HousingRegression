@@ -1,0 +1,29 @@
+{
+    "Ridge": {
+        "best_params": {
+            "alpha": 1.0,
+            "fit_intercept": true,
+            "solver": "svd"
+        },
+        "best_score": 0.7245141552849551,
+        "test_score": 0.6684624359643561
+    },
+    "Lasso": {
+        "best_params": {
+            "alpha": 0.01,
+            "max_iter": 1000,
+            "tol": 0.0001
+        },
+        "best_score": 0.7241453136360594,
+        "test_score": 0.6681815922762605
+    },
+    "Random Forest": {
+        "best_params": {
+            "max_depth": null,
+            "min_samples_split": 2,
+            "n_estimators": 100
+        },
+        "best_score": 0.8272641058183259,
+        "test_score": 0.8897591028224269
+    }
+}
